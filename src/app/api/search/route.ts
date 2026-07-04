@@ -22,10 +22,12 @@ export async function GET(req: Request) {
       FROM CAPTEUR c
       JOIN GAZ g ON c.sigle = g.sigle
       JOIN Agence a ON c.id_agence = a.id_agence
-      LEFT JOIN RELEVE r ON r.id_capteur = c.id_capteur
-        AND r.date_releve = (
-          SELECT MAX(r2.date_releve) FROM RELEVE r2 WHERE r2.id_capteur = c.id_capteur
-        )
+      LEFT JOIN (
+        SELECT id_capteur, MAX(date_releve) AS max_date
+        FROM RELEVE
+        GROUP BY id_capteur
+      ) m ON m.id_capteur = c.id_capteur
+      LEFT JOIN RELEVE r ON r.id_capteur = c.id_capteur AND r.date_releve = m.max_date
       WHERE c.ville_capteur LIKE ?
         ${sigle ? 'AND g.sigle = ?' : ''}
       ORDER BY c.ville_capteur, g.sigle
