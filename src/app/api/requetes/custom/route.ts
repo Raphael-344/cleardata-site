@@ -1,21 +1,23 @@
 import { NextResponse } from 'next/server'
 import { query } from '@/lib/db'
+import { securiserSelect, TIMEOUT_MS } from '@/lib/sqlGuard'
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
-  const sql = searchParams.get('sql')
+  const validation = securiserSelect(searchParams.get('sql') ?? '')
 
-  if (!sql) return NextResponse.json({ error: 'SQL manquant' }, { status: 400 })
-
-  // Sécurité : uniquement SELECT
-  if (!sql.trim().toUpperCase().startsWith('SELECT')) {
-    return NextResponse.json({ error: 'Seules les requêtes SELECT sont autorisées' }, { status: 403 })
+  if (!validation.ok) {
+    return NextResponse.json({ error: validation.erreur }, { status: 400 })
   }
 
   try {
-    const rows = await query(sql)
-    return NextResponse.json({ rows, count: (rows as any[]).length })
+    const rows = await query(validation.sql, [], TIMEOUT_MS + 1000)
+    return NextResponse.json({ rows, count: rows.length })
   } catch (e: any) {
-    return NextResponse.json({ error: e.message }, { status: 500 })
+    const timeout = e?.code === 'PROTOCOL_SEQUENCE_TIMEOUT' || /max(imum)?[_ ]execution[_ ]time|interrupted/i.test(e?.message ?? '')
+    return NextResponse.json(
+      { error: timeout ? `Requête interrompue : plus de ${TIMEOUT_MS / 1000} s d'exécution` : 'Erreur lors de l\'exécution de la requête' },
+      { status: timeout ? 408 : 500 }
+    )
   }
 }

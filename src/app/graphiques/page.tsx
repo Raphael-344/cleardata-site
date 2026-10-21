@@ -79,7 +79,7 @@ export default function GraphiquesPage() {
         <div className="glass p-6">
           <div className="flex items-center gap-2 mb-6">
             <TrendingUp size={18} className="text-air-400" />
-            <h2 className="font-display font-bold text-lg">Évolution 2017–2024 — {sigle} en {region}</h2>
+            <h2 className="font-display font-bold text-lg">Évolution mensuelle — {sigle} en {region}</h2>
           </div>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={evolution}>
@@ -98,7 +98,7 @@ export default function GraphiquesPage() {
           <div className="glass p-6">
             <div className="flex items-center gap-2 mb-6">
               <Globe size={18} className="text-air-400" />
-              <h2 className="font-display font-bold text-lg">Comparaison régions — {sigle} (2024)</h2>
+              <h2 className="font-display font-bold text-lg">Comparaison régions — {sigle} (12 derniers mois)</h2>
             </div>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={regions} layout="vertical">
@@ -115,7 +115,7 @@ export default function GraphiquesPage() {
           <div className="glass p-6">
             <div className="flex items-center gap-2 mb-6">
               <BarChart3 size={18} className="text-air-400" />
-              <h2 className="font-display font-bold text-lg">Tous les gaz — {region} (2024)</h2>
+              <h2 className="font-display font-bold text-lg">Tous les gaz — {region} (12 derniers mois)</h2>
             </div>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={gaz}>

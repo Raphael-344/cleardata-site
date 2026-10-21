@@ -67,8 +67,8 @@ export default function CartePage() {
         {/* Date */}
         <div className="flex items-center gap-2">
           <Calendar size={14} className="text-slate-500" />
-          <input type="date" value={date} onChange={e => setDate(e.target.value)}
-            min="2017-01-01" max="2024-12-01"
+          <input type="month" value={date} onChange={e => setDate(e.target.value)}
+            min="2025-05" max="2026-04"
             className="bg-dark-700 border border-air-500/20 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-air-500/50" />
           {date && <button onClick={() => setDate('')} className="text-xs text-slate-500 hover:text-slate-300">Dernier</button>}
         </div>

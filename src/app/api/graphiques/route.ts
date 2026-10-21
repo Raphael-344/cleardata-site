@@ -30,7 +30,7 @@ export async function GET(req: Request) {
         JOIN CAPTEUR c ON r.id_capteur = c.id_capteur
         JOIN GAZ g ON c.sigle = g.sigle
         JOIN Agence a ON c.id_agence = a.id_agence
-        WHERE g.sigle = ? AND YEAR(r.date_releve) = 2024
+        WHERE g.sigle = ? AND r.date_releve > (SELECT DATE_SUB(MAX(date_releve), INTERVAL 12 MONTH) FROM RELEVE)
         GROUP BY a.region ORDER BY moyenne DESC
       `, [sigle])
       return NextResponse.json(rows)
@@ -43,7 +43,7 @@ export async function GET(req: Request) {
         JOIN CAPTEUR c ON r.id_capteur = c.id_capteur
         JOIN GAZ g ON c.sigle = g.sigle
         JOIN Agence a ON c.id_agence = a.id_agence
-        WHERE a.region = ? AND YEAR(r.date_releve) = 2024
+        WHERE a.region = ? AND r.date_releve > (SELECT DATE_SUB(MAX(date_releve), INTERVAL 12 MONTH) FROM RELEVE)
         GROUP BY g.sigle, g.nom_gaz ORDER BY g.sigle
       `, [region])
       return NextResponse.json(rows)

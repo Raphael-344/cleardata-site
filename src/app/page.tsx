@@ -146,7 +146,7 @@ export default async function Home() {
         <div className="grid md:grid-cols-3 gap-6">
           {[
             { href: '/carte', title: 'Carte interactive', desc: 'Visualisez les capteurs et concentrations sur une carte de France zoomable.', icon: MapPin },
-            { href: '/graphiques', title: 'Graphiques', desc: "Évolution temporelle, comparaisons inter-régions, tendances 2017–2024.", icon: Activity },
+            { href: '/graphiques', title: 'Graphiques', desc: "Évolution temporelle, comparaisons inter-régions, tendances sur 12 mois (mai 2025 – avril 2026).", icon: Activity },
             { href: '/requetes', title: '12 Requêtes SQL', desc: 'Toutes les requêtes du cahier des charges avec résultats visuels en direct.', icon: FileText },
           ].map(({ href, title, desc, icon: Icon }) => (
             <Link key={href} href={href}

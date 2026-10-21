@@ -8,7 +8,8 @@ export async function GET(req: Request) {
 
   try {
     // Si pas de date, prendre le dernier relevé disponible
-    let targetDate = date
+    // Les relevés sont mensuels : une date (AAAA-MM ou AAAA-MM-JJ) désigne son mois entier
+    let targetDate = date && /^\d{4}-\d{2}/.test(date) ? `${date.slice(0, 7)}-01` : null
     if (!targetDate) {
       const [last] = await query(`SELECT DATE_FORMAT(MAX(date_releve), '%Y-%m-%d') AS last_date FROM RELEVE`) as any[]
       targetDate = last?.last_date ?? '2026-04-01'
@@ -27,10 +28,10 @@ export async function GET(req: Request) {
       JOIN CAPTEUR c ON r.id_capteur = c.id_capteur
       JOIN GAZ g ON c.sigle = g.sigle
       JOIN Agence a ON c.id_agence = a.id_agence
-      WHERE g.sigle = ? AND r.date_releve = ?
+      WHERE g.sigle = ? AND r.date_releve >= ? AND r.date_releve < DATE_ADD(?, INTERVAL 1 MONTH)
       GROUP BY c.ville_capteur, a.region, g.sigle, g.nom_gaz, g.type_gaz
       LIMIT 50000
-    `, [sigle, targetDate])
+    `, [sigle, targetDate, targetDate])
 
     return NextResponse.json({ rows, date: targetDate })
   } catch (e: any) {
