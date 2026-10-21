@@ -1,5 +1,7 @@
 # ClearData
 
+> Projet étudiant CESI, non affilié au Ministère de la Transition écologique.
+
 Plateforme nationale de surveillance de la qualité de l'air en France, construite autour d'une base de données relationnelle de ~3 millions de relevés réels issus de données INSEE.
 
 ## Démo en ligne
@@ -14,7 +16,7 @@ J'ai été responsable de la **contribution technique principale** : modélisati
 
 ## Stack technique
 
-- **Frontend / Backend** : [Next.js 14](https://nextjs.org/) (App Router), TypeScript, Tailwind CSS
+- **Frontend / Backend** : [Next.js 14.2](https://nextjs.org/) (App Router), TypeScript, Tailwind CSS
 - **Base de données** : MySQL (schéma relationnel), migré vers [TiDB Cloud](https://www.pingcap.com/tidb-cloud/) (compatible protocole MySQL) pour l'hébergement gratuit en production
 - **Modélisation des données** : méthode **Merise** (MCD/MLD) pour la conception du schéma relationnel (agences, capteurs, gaz, relevés, rapports, employés)
 - **Génération des données** : scripts **Python** pour produire le jeu de données synthétique à partir de données réelles INSEE (communes, régions)
@@ -28,7 +30,15 @@ J'ai été responsable de la **contribution technique principale** : modélisati
 - **Graphiques & tendances** — évolution temporelle des concentrations, comparaisons inter-régions, répartition par gaz
 - **12 requêtes SQL** — jeu de requêtes du cahier des charges (jointures, sous-requêtes corrélées, agrégations) exécutées en direct sur la base et affichées avec leurs résultats
 - **Recherche de ville** — recherche par nom de commune avec dernières concentrations relevées, tous gaz confondus
-- **Requêtes SQL personnalisées** — endpoint permettant d'exécuter des requêtes `SELECT` arbitraires sur la base
+- **Requêtes en langage naturel** — une question en français (« liste des agences », « capteurs actifs »…) est traduite en `SELECT` et exécutée via un endpoint sécurisé (voir ci-dessous)
+
+### Sécurité de l'endpoint SQL libre (`/api/requetes/custom`)
+
+Les requêtes libres passent par un garde-fou applicatif ([`src/lib/sqlGuard.ts`](src/lib/sqlGuard.ts)) :
+
+- une seule instruction, uniquement `SELECT` (pas de commentaires, `UNION`, `INTO OUTFILE`, `SLEEP`, variables système…) ;
+- tables autorisées : `Agence`, `CAPTEUR`, `GAZ`, `RELEVE`, `RAPPORT`, `EMPLOYE` (sous-requêtes comprises) ;
+- `LIMIT` imposé (100 lignes max) et temps d'exécution limité à 5 s.
 
 ## Chiffres clés
 
@@ -40,6 +50,20 @@ J'ai été responsable de la **contribution technique principale** : modélisati
 | Gaz surveillés | 7 (CO2, CH4, N2O, O3, HFC, SF6, NH3) |
 | Rapports publiés | 96 |
 | Agents terrain | 206 |
+
+Les volumes ci-dessus sont ceux renvoyés par `/api/stats` (requêtes `COUNT(*)` sur la base de production). Les relevés couvrent **mai 2025 à avril 2026** (un relevé mensuel par capteur).
+
+### Adaptation des requêtes aux données
+
+Le jeu de données a été régénéré sur la période mai 2025 – avril 2026. Trois requêtes du cahier des charges ont donc été adaptées aux données réellement disponibles, sans modifier la logique SQL :
+
+| Requête | Énoncé d'origine | Version adaptée |
+|---|---|---|
+| R05 | CH4 en Île-de-France, Bretagne, Occitanie — mai-juin 2023 | même requête sur mai-juin **2025** |
+| R07 | Rapports concernant le NH3 | rapports concernant le **CO2** (aucun rapport n'est lié au NH3 dans les données) |
+| R09 | Moyennes par gaz en Île-de-France — 2020 | même requête sur **2025** |
+
+Les graphiques « comparaison régions » et « tous les gaz » portent sur les 12 derniers mois disponibles.
 
 ## Installation et lancement en local
 
@@ -65,7 +89,7 @@ J'ai été responsable de la **contribution technique principale** : modélisati
 
 3. **Configurer les variables d'environnement**
 
-   Créer un fichier `.env.local` à la racine :
+   Copier `.env.example` en `.env.local` à la racine et le compléter :
 
    ```
    DB_HOST=<host de la base>
@@ -75,9 +99,9 @@ J'ai été responsable de la **contribution technique principale** : modélisati
    DB_NAME=<nom de la base>
    ```
 
-4. **Importer le schéma et les données**
+4. **Base de données**
 
-   Importer le dump SQL du schéma (tables `Agence`, `CAPTEUR`, `GAZ`, `RELEVE`, `RAPPORT`, `EMPLOYE`, etc.) dans votre base MySQL/TiDB.
+   Le dump SQL (schéma + ~3 M de relevés) n'est pas versionné dans ce dépôt en raison de sa taille. Sans accès à une base peuplée, le site se lance et les pages s'affichent, mais les appels API renvoient une erreur. Pour voir le site avec ses données, utiliser la [démo en ligne](https://cleardata-site.vercel.app).
 
 5. **Lancer le serveur de développement**
 
@@ -87,6 +111,10 @@ J'ai été responsable de la **contribution technique principale** : modélisati
 
    Le site est accessible sur [http://localhost:3000](http://localhost:3000).
 
+### Fond de carte (clé CARTO)
+
+Depuis septembre 2026, les fonds de carte [CARTO Basemaps](https://carto.com/basemaps/apikey) exigent une clé d'API (gratuite jusqu'à 5 M de requêtes par mois en usage non commercial). Renseigner `NEXT_PUBLIC_CARTO_API_KEY` dans `.env.local` (et dans les variables d'environnement Vercel). Sans clé, le site fonctionne mais les tuiles affichent un filigrane « API KEY REQUIRED ».
+
 ### Scripts disponibles
 
 | Commande | Description |
@@ -94,3 +122,13 @@ J'ai été responsable de la **contribution technique principale** : modélisati
 | `npm run dev` | Lance le serveur de développement |
 | `npm run build` | Build de production |
 | `npm run start` | Démarre le serveur en mode production |
+
+## Tester en 2 minutes
+
+Sur la démo en ligne :
+
+1. **Accueil** — les compteurs (agences, capteurs, relevés) s'affichent.
+2. **Requêtes** — lancer R05, R07 et R09 : chacune renvoie des lignes.
+3. **Carte** — choisir un gaz puis un mois entre mai 2025 et avril 2026.
+4. **Recherche** — taper « Paris ».
+5. API : [`/api/stats`](https://cleardata-site.vercel.app/api/stats), [`/api/requetes?id=5`](https://cleardata-site.vercel.app/api/requetes?id=5)

@@ -23,7 +23,7 @@ const REQUETES: Record<string, { label: string; sql: string; params?: any[] }> =
           WHERE YEAR(date_rapport) BETWEEN 2018 AND 2022 ORDER BY date_rapport`,
   },
   '5': {
-    label: 'Concentrations CH4 — Île-de-France, Bretagne, Occitanie (mai-juin 2023)',
+    label: 'Concentrations CH4 — Île-de-France, Bretagne, Occitanie (mai-juin 2025)',
     sql: `SELECT a.region, c.ville_capteur, r.date_releve, r.concentration_ppm
           FROM RELEVE r
           JOIN CAPTEUR c ON r.id_capteur = c.id_capteur
@@ -31,7 +31,7 @@ const REQUETES: Record<string, { label: string; sql: string; params?: any[] }> =
           JOIN Agence a ON c.id_agence = a.id_agence
           WHERE g.sigle = 'CH4'
             AND a.region IN ('Île-de-France','Bretagne','Occitanie')
-            AND MONTH(r.date_releve) IN (5,6) AND YEAR(r.date_releve) = 2023
+            AND MONTH(r.date_releve) IN (5,6) AND YEAR(r.date_releve) = 2025
           ORDER BY a.region, r.date_releve LIMIT 200`,
   },
   '6': {
@@ -43,13 +43,13 @@ const REQUETES: Record<string, { label: string; sql: string; params?: any[] }> =
           WHERE g.type_gaz = 'GESI' ORDER BY e.nom`,
   },
   '7': {
-    label: 'Rapports concernant NH3 — ordre antichronologique',
+    label: 'Rapports concernant le CO2 — ordre antichronologique',
     sql: `SELECT DISTINCT r.titre, r.date_rapport FROM RAPPORT r
           JOIN CONCERNER co ON r.id_rapport = co.id_rapport
           JOIN RELEVE re ON co.id_releve = re.id_releve
           JOIN CAPTEUR c ON re.id_capteur = c.id_capteur
           JOIN GAZ g ON c.sigle = g.sigle
-          WHERE g.sigle = 'NH3' ORDER BY r.date_rapport DESC`,
+          WHERE g.sigle = 'CO2' ORDER BY r.date_rapport DESC`,
   },
   '8': {
     label: 'Mois de concentration HFC minimale par région',
@@ -69,13 +69,13 @@ const REQUETES: Record<string, { label: string; sql: string; params?: any[] }> =
           ) ORDER BY a.region`,
   },
   '9': {
-    label: 'Moyenne concentrations Île-de-France 2020 par gaz',
+    label: 'Moyenne concentrations Île-de-France 2025 par gaz',
     sql: `SELECT g.sigle, g.nom_gaz, ROUND(AVG(r.concentration_ppm),4) AS moyenne_ppm
           FROM RELEVE r
           JOIN CAPTEUR c ON r.id_capteur = c.id_capteur
           JOIN GAZ g ON c.sigle = g.sigle
           JOIN Agence a ON c.id_agence = a.id_agence
-          WHERE a.region = 'Île-de-France' AND YEAR(r.date_releve) = 2020
+          WHERE a.region = 'Île-de-France' AND YEAR(r.date_releve) = 2025
           GROUP BY g.sigle, g.nom_gaz ORDER BY g.sigle`,
   },
   '10': {

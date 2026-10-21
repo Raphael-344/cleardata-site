@@ -63,6 +63,9 @@ export default async function Home() {
               <span className="w-1.5 h-1.5 rounded-full bg-air-400 animate-pulse" />
               MINISTÈRE DE LA TRANSITION ÉCOLOGIQUE
             </div>
+            <span className="ml-3 text-xs text-slate-500 align-middle">
+              Projet étudiant CESI, non affilié au Ministère de la Transition écologique
+            </span>
             <h1 className="font-display text-5xl md:text-7xl font-extrabold leading-[1.05] mb-6">
               Qualité de l'air<br />
               <span className="text-air-400">en France</span>
@@ -146,7 +149,7 @@ export default async function Home() {
         <div className="grid md:grid-cols-3 gap-6">
           {[
             { href: '/carte', title: 'Carte interactive', desc: 'Visualisez les capteurs et concentrations sur une carte de France zoomable.', icon: MapPin },
-            { href: '/graphiques', title: 'Graphiques', desc: "Évolution temporelle, comparaisons inter-régions, tendances 2017–2024.", icon: Activity },
+            { href: '/graphiques', title: 'Graphiques', desc: "Évolution temporelle, comparaisons inter-régions, tendances sur 12 mois (mai 2025 – avril 2026).", icon: Activity },
             { href: '/requetes', title: '12 Requêtes SQL', desc: 'Toutes les requêtes du cahier des charges avec résultats visuels en direct.', icon: FileText },
           ].map(({ href, title, desc, icon: Icon }) => (
             <Link key={href} href={href}

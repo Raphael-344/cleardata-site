@@ -11,8 +11,8 @@ const pool = mysql.createPool({
   ssl: { minVersion: 'TLSv1.2' },
 })
 
-export async function query<T = any>(sql: string, params?: any[]): Promise<T[]> {
-  const [rows] = await pool.execute(sql, params)
+export async function query<T = any>(sql: string, params?: any[], timeout?: number): Promise<T[]> {
+  const [rows] = await pool.execute({ sql, timeout }, params)
   return rows as T[]
 }
 

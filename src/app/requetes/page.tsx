@@ -7,11 +7,11 @@ const REQUETES = [
   { id: '2', label: 'Personnel technique Bordeaux', desc: 'Agents techniques de l\'agence de Bordeaux' },
   { id: '3', label: 'Nombre de capteurs', desc: 'Comptage total des capteurs déployés' },
   { id: '4', label: 'Rapports 2018–2022', desc: 'Rapports publiés entre 2018 et 2022' },
-  { id: '5', label: 'CH4 en IdF, Bretagne, Occitanie', desc: 'Concentrations méthane en mai-juin 2023' },
+  { id: '5', label: 'CH4 en IdF, Bretagne, Occitanie', desc: 'Concentrations méthane en mai-juin 2025' },
   { id: '6', label: 'Agents GESI', desc: 'Techniciens maintenant des capteurs de gaz industriels' },
-  { id: '7', label: 'Rapports NH3', desc: 'Rapports concernant l\'ammoniac, ordre antichronologique' },
+  { id: '7', label: 'Rapports CO2', desc: 'Rapports concernant le dioxyde de carbone, ordre antichronologique' },
   { id: '8', label: 'Minimum HFC par région', desc: 'Mois de concentration HFC la plus faible' },
-  { id: '9', label: 'Moyennes IdF 2020', desc: 'Concentration moyenne par gaz en Île-de-France en 2020' },
+  { id: '9', label: 'Moyennes IdF 2025', desc: 'Concentration moyenne par gaz en Île-de-France en 2025' },
   { id: '10', label: 'Productivité admins Toulouse', desc: 'Taux de production de rapports des agents admin' },
   { id: '11', label: 'Rapports par gaz', desc: 'Procédure stockée — rapports pour un gaz donné', hasParam: true },
   { id: '12', label: 'Régions sous-encadrées', desc: 'Régions avec plus de capteurs que de personnel' },
@@ -84,7 +84,7 @@ export default function RequetesPage() {
         <h1 className="font-display text-4xl md:text-5xl font-extrabold mb-4">
           12 Requêtes<br /><span className="text-air-400">du cahier des charges</span>
         </h1>
-        <p className="text-slate-400 max-w-xl">Exécutez les requêtes en direct sur la base de données.</p>
+        <p className="text-slate-400 max-w-xl">Exécutez les requêtes en direct sur la base de données. Les années et le gaz des requêtes R05, R07 et R09 sont adaptés aux données disponibles (relevés de mai 2025 à avril 2026).</p>
       </div>
 
       <div className="grid lg:grid-cols-3 gap-8">
