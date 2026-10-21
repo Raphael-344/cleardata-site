@@ -45,12 +45,15 @@ export default function MapComponent({ data, sigle, color, minVal, maxVal }: Pro
         center: [46.5, 2.5],
         zoom: 6,
         zoomControl: true,
-        attributionControl: false,
+        attributionControl: true,
         preferCanvas: true,
       })
       // Clé CARTO Basemaps obligatoire depuis septembre 2026 (sinon tuiles avec filigrane)
       const cartoKey = process.env.NEXT_PUBLIC_CARTO_API_KEY
-      L.tileLayer(`https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png${cartoKey ? `?key=${cartoKey}` : ''}`, { maxZoom: 19 }).addTo(map)
+      L.tileLayer(`https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png${cartoKey ? `?key=${cartoKey}` : ''}`, {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      }).addTo(map)
       mapInstanceRef.current = map
     })
     return () => { mapInstanceRef.current?.remove(); mapInstanceRef.current = null }

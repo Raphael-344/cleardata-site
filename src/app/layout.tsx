@@ -9,7 +9,7 @@ const jetbrains = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono', 
 
 export const metadata: Metadata = {
   title: 'ClearData — Qualité de l\'air en France',
-  description: 'Plateforme nationale de surveillance de la qualité de l\'air — Ministère de la Transition Écologique',
+  description: 'Plateforme de surveillance de la qualité de l\'air — Projet étudiant CESI, non affilié au Ministère de la Transition écologique',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

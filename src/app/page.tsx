@@ -63,6 +63,9 @@ export default async function Home() {
               <span className="w-1.5 h-1.5 rounded-full bg-air-400 animate-pulse" />
               MINISTÈRE DE LA TRANSITION ÉCOLOGIQUE
             </div>
+            <span className="ml-3 text-xs text-slate-500 align-middle">
+              Projet étudiant CESI, non affilié au Ministère de la Transition écologique
+            </span>
             <h1 className="font-display text-5xl md:text-7xl font-extrabold leading-[1.05] mb-6">
               Qualité de l'air<br />
               <span className="text-air-400">en France</span>

@@ -1,5 +1,7 @@
 # ClearData
 
+> Projet étudiant CESI, non affilié au Ministère de la Transition écologique.
+
 Plateforme nationale de surveillance de la qualité de l'air en France, construite autour d'une base de données relationnelle de ~3 millions de relevés réels issus de données INSEE.
 
 ## Démo en ligne
