@@ -48,7 +48,9 @@ export default function MapComponent({ data, sigle, color, minVal, maxVal }: Pro
         attributionControl: false,
         preferCanvas: true,
       })
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(map)
+      // Clé CARTO Basemaps obligatoire depuis septembre 2026 (sinon tuiles avec filigrane)
+      const cartoKey = process.env.NEXT_PUBLIC_CARTO_API_KEY
+      L.tileLayer(`https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png${cartoKey ? `?key=${cartoKey}` : ''}`, { maxZoom: 19 }).addTo(map)
       mapInstanceRef.current = map
     })
     return () => { mapInstanceRef.current?.remove(); mapInstanceRef.current = null }

@@ -109,6 +109,10 @@ Les graphiques « comparaison régions » et « tous les gaz » portent sur les 
 
    Le site est accessible sur [http://localhost:3000](http://localhost:3000).
 
+### Fond de carte (clé CARTO)
+
+Depuis septembre 2026, les fonds de carte [CARTO Basemaps](https://carto.com/basemaps/apikey) exigent une clé d'API (gratuite jusqu'à 5 M de requêtes par mois en usage non commercial). Renseigner `NEXT_PUBLIC_CARTO_API_KEY` dans `.env.local` (et dans les variables d'environnement Vercel). Sans clé, le site fonctionne mais les tuiles affichent un filigrane « API KEY REQUIRED ».
+
 ### Scripts disponibles
 
 | Commande | Description |
